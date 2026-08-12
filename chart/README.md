@@ -1,6 +1,6 @@
 # PCSX2 Helm Chart
 
-[![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square)](https://github.com/HenriqZimer/pcsx2-helm-chart)
+[![Version: 1.1.1](https://img.shields.io/badge/Version-1.1.1-informational?style=flat-square)](https://github.com/HenriqZimer/pcsx2-helm-chart)
 [![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)](https://docs.linuxserver.io/images/docker-pcsx2/)
 
 A Helm chart for [PCSX2](https://docs.linuxserver.io/images/docker-pcsx2/) - the linuxserver.io
@@ -45,7 +45,7 @@ git clone https://github.com/HenriqZimer/pcsx2-helm-chart.git
 cd pcsx2-helm-chart
 
 helm package chart/
-helm install pcsx2 ./pcsx2-1.1.0.tgz
+helm install pcsx2 ./pcsx2-1.1.1.tgz
 ```
 
 ## Configuration
@@ -149,9 +149,31 @@ extraVolumeMounts:
     mountPath: /romm/library
 ```
 
-Then in RomM's `config.yml`, point `broker_host` at this Service on the
-broker port (e.g. `http://pcsx2.<namespace>.svc.cluster.local:8000`) and
-`host` at the HTTPS KasmVNC port — see the [Configuration File reference](https://docs.romm.app/latest/reference/configuration-file/#streaming)
+Then in RomM's `config.yml`, `broker_host` and `host` mean different things
+and are reached from different places — mixing them up is the most common
+way to get this stuck:
+
+- `broker_host` is called **server-to-server**, by RomM's own backend. Point
+  it at this Service's ClusterIP on the broker port, e.g.
+  `http://pcsx2.<namespace>.svc.cluster.local:8000` — cluster-internal DNS
+  is fine, nothing outside the cluster ever needs to reach it. Keep it off
+  any externally-reachable Ingress/LoadBalancer.
+- `host` is opened **directly by the end user's browser**, so it must be an
+  address that specific browser can reach and gets HTTPS from — cluster-
+  internal DNS (`*.svc.cluster.local`) will not resolve there, and a bare
+  ClusterIP won't either. Two ways to satisfy that:
+  - Set `ingress.enabled: true` (pointing at `service.httpPort`, since the
+    Ingress controller terminates TLS) and use a real certificate — this
+    also sidesteps the next point entirely.
+  - Reach the container's own KasmVNC HTTPS port directly (`service.httpsPort`,
+    via a LoadBalancer Service or NodePort). Its self-signed cert has
+    `CN=*` with **no Subject Alternative Name**, which Chrome/Firefox will
+    let you click through but which some browsers (notably Safari) refuse
+    outright instead of showing the usual "unsafe site" warning — if `host`
+    loads fine in Chrome but fails immediately in Safari with a vague
+    "might be down or moved" error, this is why.
+
+See the [Configuration File reference](https://docs.romm.app/latest/reference/configuration-file/#streaming)
 for the full `streaming` schema.
 
 ## Values

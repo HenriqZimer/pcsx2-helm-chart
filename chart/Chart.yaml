@@ -2,7 +2,7 @@ apiVersion: v2
 name: pcsx2
 description: A Helm chart for PCSX2 - the linuxserver.io PS2 emulator KasmVNC webtop image
 type: application
-version: 1.1.0
+version: 1.1.1
 appVersion: "latest"
 keywords:
   - pcsx2
@@ -35,9 +35,13 @@ annotations:
     - name: Documentation
       url: https://github.com/HenriqZimer/pcsx2-helm-chart/blob/main/chart/README.md
   artifacthub.io/changes: |
-    - kind: added
-      description: Add streaming.enabled/streaming.brokerPort to expose the RomM emulator-streaming broker sidecar port (added via a DOCKER_MODS Docker Mod), for use with docs.romm.app/latest/using/emulator-streaming
+    - kind: changed
+      description: Clarify the streaming README section - host must be reachable directly by the end user's browser (not cluster-internal DNS), and the container's self-signed cert has no SAN, which some browsers refuse outright
   artifacthub.io/changesHistory: |
+    - version: 1.1.0
+      changes:
+        - kind: added
+          description: Add streaming.enabled/streaming.brokerPort to expose the RomM emulator-streaming broker sidecar port (added via a DOCKER_MODS Docker Mod), for use with docs.romm.app/latest/using/emulator-streaming
     - version: 1.0.0
       changes:
         - kind: added

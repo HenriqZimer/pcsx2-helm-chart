@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-08-12
+
+### Changed
+- Clarified the streaming README section: `broker_host` is server-to-server (cluster-internal DNS is fine, keep it off any externally-reachable Ingress/LoadBalancer), while `host` is opened directly by the end user's browser and needs real external reachability + TLS. Documented that the container's self-signed cert has no SAN, which some browsers (notably Safari) refuse outright instead of showing the usual clickthrough warning.
+
 ## [1.1.0] - 2026-08-12
 
 ### Added
