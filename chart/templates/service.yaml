@@ -24,3 +24,9 @@ spec:
       port: {{ .Values.service.httpsPort }}
       targetPort: https
       protocol: TCP
+    {{- if .Values.streaming.enabled }}
+    - name: broker
+      port: {{ .Values.streaming.brokerPort }}
+      targetPort: broker
+      protocol: TCP
+    {{- end }}

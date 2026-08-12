@@ -48,6 +48,11 @@ spec:
             - name: https
               containerPort: {{ .Values.service.httpsPort }}
               protocol: TCP
+            {{- if .Values.streaming.enabled }}
+            - name: broker
+              containerPort: {{ .Values.streaming.brokerPort }}
+              protocol: TCP
+            {{- end }}
           env:
             {{- range $key, $value := .Values.env }}
             - name: {{ $key }}

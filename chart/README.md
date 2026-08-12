@@ -1,6 +1,6 @@
 # PCSX2 Helm Chart
 
-[![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square)](https://github.com/HenriqZimer/pcsx2-helm-chart)
+[![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square)](https://github.com/HenriqZimer/pcsx2-helm-chart)
 [![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)](https://docs.linuxserver.io/images/docker-pcsx2/)
 
 A Helm chart for [PCSX2](https://docs.linuxserver.io/images/docker-pcsx2/) - the linuxserver.io
@@ -45,7 +45,7 @@ git clone https://github.com/HenriqZimer/pcsx2-helm-chart.git
 cd pcsx2-helm-chart
 
 helm package chart/
-helm install pcsx2 ./pcsx2-1.0.0.tgz
+helm install pcsx2 ./pcsx2-1.1.0.tgz
 ```
 
 ## Configuration
@@ -118,6 +118,42 @@ gpu:
   supplementalGroups: [44, 109] # host's video/render group GIDs; check with `getent group video render`
 ```
 
+### RomM emulator streaming
+
+This chart can also run as a target for RomM's [Emulator Streaming](https://docs.romm.app/latest/using/emulator-streaming/)
+feature, which launches ROMs directly inside this container and streams them
+back to the browser (as opposed to in-browser emulation). That feature is
+provided by a third-party [Docker Mod](https://github.com/LoneAngelFayt/pcsx2-romm-integration)
+(not maintained by this chart or by linuxserver.io/RomM) — this chart only
+adds the plumbing to expose its broker port:
+
+```yaml
+env:
+  DOCKER_MODS: "ghcr.io/loneangelfayt/pcsx2-romm-integration-mod:latest"
+  ROM_ROOT: "/romm/library" # must match the mountPath below
+
+envFrom:
+  - secretRef:
+      name: streaming-broker-secret # must provide BROKER_SECRET
+
+streaming:
+  enabled: true # exposes containerPort/servicePort "broker" (8000)
+
+# Mount the same ROM library RomM uses, at the same path RomM sees it at.
+extraVolumes:
+  - name: roms
+    persistentVolumeClaim:
+      claimName: romm-library-truenas
+extraVolumeMounts:
+  - name: roms
+    mountPath: /romm/library
+```
+
+Then in RomM's `config.yml`, point `broker_host` at this Service on the
+broker port (e.g. `http://pcsx2.<namespace>.svc.cluster.local:8000`) and
+`host` at the HTTPS KasmVNC port — see the [Configuration File reference](https://docs.romm.app/latest/reference/configuration-file/#streaming)
+for the full `streaming` schema.
+
 ## Values
 
 | Key | Default | Description |
@@ -129,6 +165,8 @@ gpu:
 | `env.TZ` | `Etc/UTC` | Timezone. |
 | `env.KASMVNC_ENABLE_BASIC_AUTH` | `false` | Require basic auth on the web UI. |
 | `service.httpPort` / `service.httpsPort` | `3000` / `3001` | KasmVNC ports. |
+| `streaming.enabled` | `false` | Expose the RomM streaming broker port (see above). |
+| `streaming.brokerPort` | `8000` | Broker port to expose, must match the mod's `BROKER_PORT`. |
 | `ingress.enabled` | `false` | Expose the HTTP port via Ingress. |
 | `persistence.config.enabled` | `false` | Persist `/config`. `false` uses an ephemeral emptyDir. |
 | `extraVolumes` / `extraVolumeMounts` | `[]` | Raw volume/volumeMount entries, e.g. a ROMs library. |

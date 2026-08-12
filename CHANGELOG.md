@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-08-12
+
+### Added
+- `streaming.enabled`/`streaming.brokerPort` to expose the RomM emulator-streaming broker sidecar port. The chart doesn't install the broker itself — pair with `env.DOCKER_MODS: ghcr.io/loneangelfayt/pcsx2-romm-integration-mod:latest` and mount your ROMs library at the same path RomM uses. See [Emulator Streaming](https://docs.romm.app/latest/using/emulator-streaming/).
+
 ## [1.0.0] - 2026-08-12
 
 ### Added

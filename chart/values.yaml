@@ -129,6 +129,18 @@ extraVolumeMounts: []
 # memory-backed emptyDir.
 shmSize: 1Gi
 
+# -- RomM emulator-streaming broker port. This chart does not install the
+# broker itself - it's added to the image via a Docker Mod (set
+# `env.DOCKER_MODS` to the mod image, e.g.
+# ghcr.io/loneangelfayt/pcsx2-romm-integration-mod:latest) - this block only
+# exposes the extra container/service port the mod's broker listens on.
+# See https://docs.romm.app/latest/using/emulator-streaming/
+streaming:
+  # -- Expose the broker port on the container and Service.
+  enabled: false
+  # -- Port the broker HTTP API listens on (the mod's BROKER_PORT default).
+  brokerPort: 8000
+
 # -- GPU/hardware acceleration passthrough for VA-API (Intel/AMD) via
 # /dev/dri. Requires the node to expose /dev/dri and the container's
 # supplementalGroups to match the host's render/video group GID.
