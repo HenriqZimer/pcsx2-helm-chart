@@ -1,0 +1,48 @@
+apiVersion: v1
+entries:
+  pcsx2:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
+          description: Initial release of the PCSX2 Helm chart
+      artifacthub.io/license: MIT
+      artifacthub.io/links: |
+        - name: Helm Repository
+          url: https://henriqzimer.github.io/pcsx2-helm-chart/
+        - name: Chart Source
+          url: https://github.com/HenriqZimer/pcsx2-helm-chart
+        - name: Maintainer Website
+          url: https://henriqzimer.com.br
+        - name: GitHub Profile
+          url: https://github.com/HenriqZimer
+        - name: linuxserver.io PCSX2 Image
+          url: https://docs.linuxserver.io/images/docker-pcsx2/
+        - name: Documentation
+          url: https://github.com/HenriqZimer/pcsx2-helm-chart/blob/main/chart/README.md
+    apiVersion: v2
+    appVersion: latest
+    created: "2026-08-12T13:12:05.944706624Z"
+    description: A Helm chart for PCSX2 - the linuxserver.io PS2 emulator KasmVNC
+      webtop image
+    digest: 39daba4d67f70d6fd2add146dc5ec7c4a5cb33499ab91685c371a938ac754aec
+    home: https://docs.linuxserver.io/images/docker-pcsx2/
+    keywords:
+    - pcsx2
+    - emulator
+    - playstation2
+    - retrogaming
+    - kasmvnc
+    - linuxserver
+    maintainers:
+    - email: henrique.zimermann@outlook.com
+      name: HenriqZimer
+      url: https://henriqzimer.com.br
+    name: pcsx2
+    sources:
+    - https://github.com/linuxserver/docker-pcsx2
+    - https://github.com/HenriqZimer/pcsx2-helm-chart
+    type: application
+    urls:
+    - https://github.com/HenriqZimer/pcsx2-helm-chart/releases/download/pcsx2-1.0.0/pcsx2-1.0.0.tgz
+    version: 1.0.0
+generated: "2026-08-12T13:12:05.944719789Z"
