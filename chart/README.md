@@ -1,6 +1,6 @@
 # PCSX2 Helm Chart
 
-[![Version: 1.1.1](https://img.shields.io/badge/Version-1.1.1-informational?style=flat-square)](https://github.com/HenriqZimer/pcsx2-helm-chart)
+[![Version: 1.2.0](https://img.shields.io/badge/Version-1.2.0-informational?style=flat-square)](https://github.com/HenriqZimer/pcsx2-helm-chart)
 [![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)](https://docs.linuxserver.io/images/docker-pcsx2/)
 
 A Helm chart for [PCSX2](https://docs.linuxserver.io/images/docker-pcsx2/) - the linuxserver.io
@@ -25,7 +25,8 @@ helm install pcsx2 pcsx2/pcsx2
   `storageClass`/`existingClaim` values)
 - Ingress controller (optional, only if `ingress.enabled: true`)
 - cert-manager (optional, for automatic TLS certificates)
-- A node exposing `/dev/dri` if you enable `gpu.enabled` for VA-API acceleration
+- A node exposing `/dev/dri` (`gpu.vendor: intel-amd`) or the [NVIDIA device plugin](https://github.com/NVIDIA/k8s-device-plugin)
+  (`gpu.vendor: nvidia`) if you enable `gpu.enabled`
 
 ## Installing the Chart
 
@@ -45,7 +46,7 @@ git clone https://github.com/HenriqZimer/pcsx2-helm-chart.git
 cd pcsx2-helm-chart
 
 helm package chart/
-helm install pcsx2 ./pcsx2-1.1.1.tgz
+helm install pcsx2 ./pcsx2-1.2.0.tgz
 ```
 
 ## Configuration
@@ -107,16 +108,65 @@ env:
   PASSWORD: "changeme" # prefer envFrom with a Secret instead
 ```
 
+### PCSX2 crashes when launching a game (SIGBUS)
+
+If the dashboard/UI works but a game crashes right after `EE/iR5900 Recompiler Reset` (check
+`pcsx2-qt.log` for `Unhandled SIGBUS`), PCSX2's JIT recompiler needs more `/dev/shm` than the small
+default — its "fastmem" trick mirrors the whole PS2 address space via a shared-memory mmap:
+
+```yaml
+shmSize: 2Gi # chart default; raise further if it still crashes
+```
+
+If that alone doesn't fix it, the JIT may also be hitting Docker/Kubernetes' default seccomp
+profile (blocks syscalls it needs to allocate executable memory on some kernel/libseccomp
+combinations):
+
+```yaml
+seccompUnconfined: true
+```
+
 ### GPU / hardware acceleration
 
-For VA-API acceleration on Intel/AMD hosts:
+#### Intel/AMD (VA-API)
 
 ```yaml
 gpu:
   enabled: true
+  vendor: intel-amd
   devicePath: /dev/dri
   supplementalGroups: [44, 109] # host's video/render group GIDs; check with `getent group video render`
 ```
+
+#### NVIDIA
+
+Requires the [NVIDIA device plugin](https://github.com/NVIDIA/k8s-device-plugin) already installed on the
+cluster (this chart only requests the resource, it doesn't install the plugin):
+
+```yaml
+gpu:
+  enabled: true
+  vendor: nvidia
+  nvidia:
+    count: 1
+```
+
+This sets `resources.limits."nvidia.com/gpu"` and the `NVIDIA_VISIBLE_DEVICES`/`NVIDIA_DRIVER_CAPABILITIES`
+env vars — it does **not** need `devicePath`/`supplementalGroups`, the device plugin injects `/dev/nvidia*`
+itself.
+
+Two node-level prerequisites this chart cannot set for you (see the
+[linuxserver.io GPU Configuration docs](https://docs.linuxserver.io/images/docker-pcsx2/#gpu-configuration)):
+
+- The node needs `nvidia-drm.modeset=1 nvidia_drm.fbdev=1` on its kernel command line (e.g. via GRUB), or the
+  compositor's own screen buffer allocation fails with `DRM_IOCTL_MODE_CREATE_DUMB failed: Permission denied`
+  and the desktop renders solid black even though the container itself looks healthy.
+- On a genuinely headless node (no monitor ever attached to that GPU), DRM may still need a physical HDMI/DP
+  dummy plug in the port for the driver to initialize a display at all.
+
+If PCSX2 itself crashes with `Unhandled SIGBUS` in `pcsx2-qt.log` right after `EE/iR5900 Recompiler Reset`
+(i.e. the dashboard works but launching a game doesn't), see `shmSize` below and `seccompUnconfined` above —
+this is almost always one of those two, not a GPU problem.
 
 ### RomM emulator streaming
 
@@ -192,8 +242,9 @@ for the full `streaming` schema.
 | `ingress.enabled` | `false` | Expose the HTTP port via Ingress. |
 | `persistence.config.enabled` | `false` | Persist `/config`. `false` uses an ephemeral emptyDir. |
 | `extraVolumes` / `extraVolumeMounts` | `[]` | Raw volume/volumeMount entries, e.g. a ROMs library. |
-| `shmSize` | `1Gi` | Size of the memory-backed `/dev/shm` mount (KasmVNC needs this). |
-| `gpu.enabled` | `false` | Mount `/dev/dri` for VA-API passthrough. |
+| `shmSize` | `2Gi` | Size of the memory-backed `/dev/shm` mount (KasmVNC and PCSX2's JIT both need this). |
+| `gpu.enabled` / `gpu.vendor` | `false` / `intel-amd` | Enable GPU passthrough; `intel-amd` (VA-API, `/dev/dri`) or `nvidia` (device plugin, `nvidia.com/gpu`). |
+| `seccompUnconfined` | `false` | Disable the default seccomp profile if PCSX2's JIT crashes with SIGBUS. |
 | `resources` | `500m/1Gi` requests, `2/4Gi` limits | Container resources. |
 | `serviceAccount.create` | `false` | Create a dedicated ServiceAccount. |
 

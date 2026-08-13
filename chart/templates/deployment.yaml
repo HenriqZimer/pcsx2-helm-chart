@@ -37,9 +37,15 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- with .Values.securityContext }}
+          {{- if or .Values.securityContext .Values.seccompUnconfined }}
           securityContext:
+            {{- with .Values.securityContext }}
             {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- if .Values.seccompUnconfined }}
+            seccompProfile:
+              type: Unconfined
+            {{- end }}
           {{- end }}
           ports:
             - name: http
@@ -58,6 +64,12 @@ spec:
             - name: {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
+            {{- if and .Values.gpu.enabled (eq .Values.gpu.vendor "nvidia") }}
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: "all"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: {{ .Values.gpu.nvidia.driverCapabilities | quote }}
+            {{- end }}
             {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -70,7 +82,7 @@ spec:
               mountPath: /config
             - name: shm
               mountPath: /dev/shm
-            {{- if .Values.gpu.enabled }}
+            {{- if and .Values.gpu.enabled (eq .Values.gpu.vendor "intel-amd") }}
             - name: dri
               mountPath: {{ .Values.gpu.devicePath }}
             {{- end }}
@@ -78,7 +90,13 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            requests:
+              {{- toYaml .Values.resources.requests | nindent 14 }}
+            limits:
+              {{- toYaml .Values.resources.limits | nindent 14 }}
+              {{- if and .Values.gpu.enabled (eq .Values.gpu.vendor "nvidia") }}
+              nvidia.com/gpu: {{ .Values.gpu.nvidia.count }}
+              {{- end }}
           readinessProbe:
             tcpSocket:
               port: http
@@ -89,7 +107,7 @@ spec:
               port: http
             initialDelaySeconds: 30
             periodSeconds: 20
-      {{- if .Values.gpu.enabled }}
+      {{- if and .Values.gpu.enabled (eq .Values.gpu.vendor "intel-amd") }}
       {{- with .Values.gpu.supplementalGroups }}
       securityContext:
         supplementalGroups:
@@ -113,7 +131,7 @@ spec:
           emptyDir:
             medium: Memory
             sizeLimit: {{ .Values.shmSize }}
-        {{- if .Values.gpu.enabled }}
+        {{- if and .Values.gpu.enabled (eq .Values.gpu.vendor "intel-amd") }}
         - name: dri
           hostPath:
             path: {{ .Values.gpu.devicePath }}

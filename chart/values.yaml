@@ -126,8 +126,14 @@ extraVolumeMounts: []
 
 # -- Size of the /dev/shm mount. KasmVNC/browser-based rendering is prone
 # to crashing on the small default shm size, so this is mounted as a
-# memory-backed emptyDir.
-shmSize: 1Gi
+# memory-backed emptyDir. PCSX2's EE recompiler additionally uses a
+# "fastmem" mmap trick backed by shared memory to mirror the whole PS2
+# address space for fast wraparound reads - Docker/Kubernetes' small
+# default shm is too small for it, and the JIT crashes with SIGBUS right
+# as a game starts (not on the dashboard). 2Gi is the smallest size we've
+# confirmed doesn't crash; raise it if you still see SIGBUS in
+# pcsx2-qt.log after a game launch.
+shmSize: 2Gi
 
 # -- RomM emulator-streaming broker port. This chart does not install the
 # broker itself - it's added to the image via a Docker Mod (set
@@ -141,17 +147,43 @@ streaming:
   # -- Port the broker HTTP API listens on (the mod's BROKER_PORT default).
   brokerPort: 8000
 
-# -- GPU/hardware acceleration passthrough for VA-API (Intel/AMD) via
-# /dev/dri. Requires the node to expose /dev/dri and the container's
-# supplementalGroups to match the host's render/video group GID.
+# -- GPU/hardware acceleration passthrough.
 gpu:
   enabled: false
-  # -- Host device path to mount into the container.
+  # -- GPU backend: "intel-amd" (VA-API via a /dev/dri hostPath mount) or
+  # "nvidia" (via the NVIDIA Kubernetes device plugin - requires the
+  # plugin's DaemonSet already installed on the cluster/node).
+  vendor: intel-amd
+
+  # -- Host device path to mount into the container. Only used when
+  # vendor is "intel-amd".
   devicePath: /dev/dri
   # -- Supplemental group IDs to add to the container so it can access
   # the device node (typically the host's "render" and/or "video" group
-  # GID, check with `getent group render video` on the node).
+  # GID, check with `getent group render video` on the node). Only used
+  # when vendor is "intel-amd" - the NVIDIA device plugin handles device
+  # permissions itself, no group membership needed.
   supplementalGroups: []
+
+  # -- Only used when vendor is "nvidia".
+  nvidia:
+    # -- Number of GPUs to request via the `nvidia.com/gpu` resource limit.
+    count: 1
+    # -- NVIDIA_DRIVER_CAPABILITIES value forwarded to the container.
+    # "all" is the safest default - PCSX2/Selkies need both "graphics" (EGL/
+    # GBM, the compositor) and "video"/"compute" (NVENC, CUDA), and trimming
+    # this down has caused more breakage than it saved in testing (see
+    # CHANGELOG for the shmSize/seccomp fixes this chart also carries).
+    driverCapabilities: all
+
+# -- PCSX2's EE/iR5900 JIT recompiler crashes with SIGBUS under Docker/
+# Kubernetes' default seccomp profile on some kernel/libseccomp
+# combinations (it blocks syscalls the JIT needs to allocate executable
+# memory) - see the "Strict reverse proxies"/security section of
+# https://docs.linuxserver.io/images/docker-pcsx2/. Only disable this if
+# you actually hit that crash (pcsx2-qt.log will show "Unhandled SIGBUS"
+# right after "Recompiler Reset") - it removes a real security boundary.
+seccompUnconfined: false
 
 resources:
   requests:

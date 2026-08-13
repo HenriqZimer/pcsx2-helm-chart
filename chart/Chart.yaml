@@ -2,7 +2,7 @@ apiVersion: v2
 name: pcsx2
 description: A Helm chart for PCSX2 - the linuxserver.io PS2 emulator KasmVNC webtop image
 type: application
-version: 1.1.1
+version: 1.2.0
 appVersion: "latest"
 keywords:
   - pcsx2
@@ -35,9 +35,17 @@ annotations:
     - name: Documentation
       url: https://github.com/HenriqZimer/pcsx2-helm-chart/blob/main/chart/README.md
   artifacthub.io/changes: |
+    - kind: added
+      description: Add NVIDIA GPU support (gpu.vendor=nvidia, requests nvidia.com/gpu via the NVIDIA Kubernetes device plugin) alongside the existing Intel/AMD VA-API mode
+    - kind: added
+      description: Add seccompUnconfined to work around a SIGBUS crash in PCSX2's JIT recompiler under Docker/Kubernetes' default seccomp profile on some kernel/libseccomp combinations
     - kind: changed
-      description: Clarify the streaming README section - host must be reachable directly by the end user's browser (not cluster-internal DNS), and the container's self-signed cert has no SAN, which some browsers refuse outright
+      description: Bump the default shmSize from 1Gi to 2Gi - PCSX2's JIT recompiler uses a shared-memory-backed "fastmem" mapping that crashes with SIGBUS right after game launch on the previous, smaller default
   artifacthub.io/changesHistory: |
+    - version: 1.1.1
+      changes:
+        - kind: changed
+          description: Clarify the streaming README section - host must be reachable directly by the end user's browser (not cluster-internal DNS), and the container's self-signed cert has no SAN, which some browsers refuse outright
     - version: 1.1.0
       changes:
         - kind: added
