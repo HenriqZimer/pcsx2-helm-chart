@@ -79,7 +79,7 @@ jobs:
         # Uses an isolated worktree so it never touches the checked-out tag
         # working tree (which still holds the uncommitted version bump).
         run: |
-          git worktree add /tmp/gh-pages-init --orphan gh-pages
+          git worktree add --orphan -b gh-pages /tmp/gh-pages-init
           git -C /tmp/gh-pages-init commit --allow-empty -m "Initialize gh-pages branch"
           git -C /tmp/gh-pages-init push origin gh-pages
           git worktree remove /tmp/gh-pages-init --force
