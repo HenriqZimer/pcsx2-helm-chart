@@ -1,0 +1,106 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+annotations:
+  artifacthub.io/changes: |
+    - kind: fixed
+      description: README install commands now use a unique repo alias (<name>-helm-chart) instead of the bare chart name, and pin --version explicitly, matching what actually works
+  artifacthub.io/changesHistory: |
+    - version: 1.2.4
+      changes:
+        - kind: changed
+          description: README now shows the emulator's logo at the top (linuxserver.io's own image, same one used for the chart icon)
+    - version: 1.2.3
+      changes:
+        - kind: added
+          description: Chart releases are now signed (helm package --sign) - see artifacthub.io/signKey for the public key location and fingerprint, powers the "Signed" badge on ArtifactHub
+    - version: 1.2.2
+      changes:
+        - kind: added
+          description: values.schema.json - validates values.yaml against a JSON Schema, and is what powers the "Values schema" feature/badge on ArtifactHub (previously absent)
+    - version: 1.2.1
+      changes:
+        - kind: added
+          description: icon, previously missing entirely - pointed at linuxserver.io's own logo image for this app, which is why no image was ever showing on ArtifactHub
+    - version: 1.2.0
+      changes:
+        - kind: added
+          description: Add NVIDIA GPU support (gpu.vendor=nvidia, requests nvidia.com/gpu via the NVIDIA Kubernetes device plugin) alongside the existing Intel/AMD VA-API mode
+        - kind: added
+          description: Add seccompUnconfined to work around a SIGBUS crash in PCSX2's JIT recompiler under Docker/Kubernetes' default seccomp profile on some kernel/libseccomp combinations
+        - kind: changed
+          description: Bump the default shmSize from 1Gi to 2Gi - PCSX2's JIT recompiler uses a shared-memory-backed "fastmem" mapping that crashes with SIGBUS right after game launch on the previous, smaller default
+    - version: 1.1.1
+      changes:
+        - kind: changed
+          description: Clarify the streaming README section - host must be reachable directly by the end user's browser (not cluster-internal DNS), and the container's self-signed cert has no SAN, which some browsers refuse outright
+    - version: 1.1.0
+      changes:
+        - kind: added
+          description: Add streaming.enabled/streaming.brokerPort to expose the RomM emulator-streaming broker sidecar port (added via a DOCKER_MODS Docker Mod), for use with docs.romm.app/latest/using/emulator-streaming
+    - version: 1.0.0
+      changes:
+        - kind: added
+          description: Initial release of the PCSX2 Helm chart
+  artifacthub.io/license: MIT
+  artifacthub.io/links: |
+    - name: Helm Repository
+      url: https://henriqzimer.github.io/pcsx2-helm-chart/
+    - name: Chart Source
+      url: https://github.com/HenriqZimer/pcsx2-helm-chart
+    - name: Maintainer Website
+      url: https://henriqzimer.com.br
+    - name: GitHub Profile
+      url: https://github.com/HenriqZimer
+    - name: linuxserver.io PCSX2 Image
+      url: https://docs.linuxserver.io/images/docker-pcsx2/
+    - name: Documentation
+      url: https://github.com/HenriqZimer/pcsx2-helm-chart/blob/main/chart/README.md
+  artifacthub.io/signKey: |
+    fingerprint: C2E2E16693F2715BA0B23913BF94E5067859562F
+    url: https://henriqzimer.github.io/pcsx2-helm-chart/HenriqZimer-helm-charts-public.asc
+apiVersion: v2
+appVersion: latest
+description: A Helm chart for PCSX2 - the linuxserver.io PS2 emulator KasmVNC webtop
+  image
+home: https://docs.linuxserver.io/images/docker-pcsx2/
+icon: https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/pcsx2-logo.png
+keywords:
+- - pcsx2
+- - emulator
+- - playstation2
+- - retrogaming
+- - kasmvnc
+- - linuxserver
+maintainers:
+- - email: henrique.zimermann@outlook.com
+  name: HenriqZimer
+  url: https://henriqzimer.com.br
+name: pcsx2
+sources:
+- - https://github.com/linuxserver/docker-pcsx2
+- - https://github.com/HenriqZimer/pcsx2-helm-chart
+type: application
+version: 1.2.5
+
+...
+files:
+  pcsx2-1.2.5.tgz: sha256:f1cd0850eeaeef1b45578f28e1a3b5b21d909955c92ea7d9a6351f1be8bf5ff7
+
+-----BEGIN PGP SIGNATURE-----
+
+wsG5BAEBCgBtBYJqhoMnCRC/lOUGeFlWL0UUAAAAAAAcACBzYWx0QG5vdGF0aW9u
+cy5vcGVucGdwanMub3Jnxj0ClRgTg2Td945yZAq+VwxxlzMqVpUWXmDDsPHo9hkW
+IQTC4uFmk/JxW6CyORO/lOUGeFlWLwAAq6EP/Ap630a2J+vlfbSX6EY8nKeeOLCw
+yK/4sLarz5FUGr41DI75oS+fe/2osKRHFVJD3Bz7ie6el0Zlsy6NnHA2Pefd12p0
+9MwEHkU4XjIdnMRL2hRcflGnQ9Lu3fcLAfHpsyAP6fXT34pvcSg3775AgnKRjwFL
+s+WWxGEq8zAniBPLeNcXTY5kP17Q1X9+0/IFNwAbPvev+2K6C8E8BisLNK3Dms+T
+knF6zPWkH2x6SZ3MBDUasc+yu5J+ZzsuxncX3tvOiYS5F8bBYcWWbeKB43EEnJ7H
+0HxTZbK0c1VRhYtNyVoRcFwFms9Nlb4P7T9Lbe/iRTbOZqy4PhnFMA9O8wcIQY04
+L09rSswAYXXW54Hk2UGRqsZOl0czs+14TnOqaaAsyYEH5/kKBcaD19bU0f/bH2+3
++M/3JVnUyn6daNBrLXsiED0kXUU7Oq+c3Vz2fQ9PNhVuxKgSIjhSwlx/xxXJqNak
+mqzAQlBXKhkkww1v2p6If4KWZHLWBtOhFs7Cejct55srMtx1y1Clo+QUBLAv3M+c
+Q8JhuV0vIZNxUrezhGtbPnIRp+O3jtTKWUvuAUKX4WURCHd4zkqRQ+GMvx08DW/L
+IcP2smtTPZ1ntxbM/DXCEsKVTAu668PoB3YF3R/zHOaiJY9mgzr21rQpKX78RJxZ
+07RqzWQVNIuS/pjs
+-----END PGP SIGNATURE-----
