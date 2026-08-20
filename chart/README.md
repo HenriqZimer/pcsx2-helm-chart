@@ -4,7 +4,7 @@
   <img src="https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/pcsx2-logo.png" alt="PCSX2 logo" width="140" />
 </p>
 
-[![Version: 1.2.4](https://img.shields.io/badge/Version-1.2.4-informational?style=flat-square)](https://github.com/HenriqZimer/pcsx2-helm-chart)
+[![Version: 1.2.5](https://img.shields.io/badge/Version-1.2.5-informational?style=flat-square)](https://github.com/HenriqZimer/pcsx2-helm-chart)
 [![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)](https://docs.linuxserver.io/images/docker-pcsx2/)
 
 A Helm chart for [PCSX2](https://docs.linuxserver.io/images/docker-pcsx2/) - the linuxserver.io
@@ -14,11 +14,11 @@ PlayStation 2 emulator, served as a full desktop over the browser via KasmVNC.
 
 ```bash
 # Add the Helm repository
-helm repo add pcsx2 https://henriqzimer.github.io/pcsx2-helm-chart
+helm repo add pcsx2-helm-chart https://henriqzimer.github.io/pcsx2-helm-chart/
 helm repo update
 
 # Install PCSX2
-helm install pcsx2 pcsx2/pcsx2
+helm install my-pcsx2 pcsx2-helm-chart/pcsx2 --version 1.2.5
 ```
 
 ## Prerequisites
@@ -37,10 +37,10 @@ helm install pcsx2 pcsx2/pcsx2
 ### From Helm Repository
 
 ```bash
-helm repo add pcsx2 https://henriqzimer.github.io/pcsx2-helm-chart
+helm repo add pcsx2-helm-chart https://henriqzimer.github.io/pcsx2-helm-chart/
 helm repo update
 
-helm install pcsx2 pcsx2/pcsx2
+helm install my-pcsx2 pcsx2-helm-chart/pcsx2 --version 1.2.5
 ```
 
 ### From Source
@@ -50,7 +50,7 @@ git clone https://github.com/HenriqZimer/pcsx2-helm-chart.git
 cd pcsx2-helm-chart
 
 helm package chart/
-helm install pcsx2 ./pcsx2-1.2.4.tgz
+helm install my-pcsx2 ./pcsx2-1.2.5.tgz
 ```
 
 ## Configuration

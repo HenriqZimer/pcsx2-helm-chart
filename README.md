@@ -28,14 +28,14 @@ your network:
 ### Add Helm Repository
 
 ```bash
-helm repo add pcsx2 https://henriqzimer.github.io/pcsx2-helm-chart/
+helm repo add pcsx2-helm-chart https://henriqzimer.github.io/pcsx2-helm-chart/
 helm repo update
 ```
 
 ### Install Chart
 
 ```bash
-helm install pcsx2 pcsx2/pcsx2
+helm install my-pcsx2 pcsx2-helm-chart/pcsx2 --version 1.2.5
 ```
 
 For detailed installation instructions and configuration options, see the [chart README](chart/README.md).
