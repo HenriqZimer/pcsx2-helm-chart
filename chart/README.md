@@ -1,6 +1,10 @@
 # PCSX2 Helm Chart
 
-[![Version: 1.2.3](https://img.shields.io/badge/Version-1.2.3-informational?style=flat-square)](https://github.com/HenriqZimer/pcsx2-helm-chart)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/pcsx2-logo.png" alt="PCSX2 logo" width="140" />
+</p>
+
+[![Version: 1.2.4](https://img.shields.io/badge/Version-1.2.4-informational?style=flat-square)](https://github.com/HenriqZimer/pcsx2-helm-chart)
 [![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)](https://docs.linuxserver.io/images/docker-pcsx2/)
 
 A Helm chart for [PCSX2](https://docs.linuxserver.io/images/docker-pcsx2/) - the linuxserver.io
@@ -46,7 +50,7 @@ git clone https://github.com/HenriqZimer/pcsx2-helm-chart.git
 cd pcsx2-helm-chart
 
 helm package chart/
-helm install pcsx2 ./pcsx2-1.2.3.tgz
+helm install pcsx2 ./pcsx2-1.2.4.tgz
 ```
 
 ## Configuration
