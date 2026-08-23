@@ -89,10 +89,10 @@ entries:
         url: https://henriqzimer.github.io/pcsx2-helm-chart/HenriqZimer-helm-charts-public.asc
     apiVersion: v2
     appVersion: latest
-    created: "2026-08-23T22:49:31.055592155Z"
+    created: "2026-08-23T22:50:08.807036684Z"
     description: A Helm chart for PCSX2 - the linuxserver.io PS2 emulator KasmVNC
       webtop image
-    digest: 406c322bd65d7a8512dbd3488156fe14610be20f8c46f4ea7178d8214c7aedc2
+    digest: 938388b68643133a6e57db2485e0ccea52731337fe02455a829e374047d5189d
     home: https://docs.linuxserver.io/images/docker-pcsx2/
     icon: https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/pcsx2-logo.png
     keywords:
@@ -112,7 +112,7 @@ entries:
     - https://github.com/HenriqZimer/pcsx2-helm-chart
     type: application
     urls:
-    - https://github.com/HenriqZimer/pcsx2-helm-chart/releases/download/v1.5.3/pcsx2-1.5.3.tgz
+    - https://henriqzimer.github.io/pcsx2-helm-chart/pcsx2-1.5.3.tgz
     version: 1.5.3
   - annotations:
       artifacthub.io/changes: |
@@ -198,7 +198,7 @@ entries:
         url: https://henriqzimer.github.io/pcsx2-helm-chart/HenriqZimer-helm-charts-public.asc
     apiVersion: v2
     appVersion: latest
-    created: "2026-08-23T21:55:59.68592006Z"
+    created: "2026-08-23T22:50:08.805227373Z"
     description: A Helm chart for PCSX2 - the linuxserver.io PS2 emulator KasmVNC
       webtop image
     digest: a193e5e255fa9c8f29d701ceba80d289a55b370cf045fa5a45c339c84e95353b
@@ -768,7 +768,7 @@ entries:
         url: https://henriqzimer.github.io/pcsx2-helm-chart/HenriqZimer-helm-charts-public.asc
     apiVersion: v2
     appVersion: latest
-    created: "2026-08-23T21:55:59.683662676Z"
+    created: "2026-08-23T22:50:08.803447559Z"
     description: A Helm chart for PCSX2 - the linuxserver.io PS2 emulator KasmVNC
       webtop image
     digest: f1cd0850eeaeef1b45578f28e1a3b5b21d909955c92ea7d9a6351f1be8bf5ff7
@@ -849,7 +849,7 @@ entries:
         url: https://henriqzimer.github.io/pcsx2-helm-chart/HenriqZimer-helm-charts-public.asc
     apiVersion: v2
     appVersion: latest
-    created: "2026-08-23T21:55:59.681919967Z"
+    created: "2026-08-23T22:50:08.801961651Z"
     description: A Helm chart for PCSX2 - the linuxserver.io PS2 emulator KasmVNC
       webtop image
     digest: aa7f9e2c5d652ec0907ef211c9af71377886c860ce479493898b4070cd4d8470
@@ -926,7 +926,7 @@ entries:
         url: https://henriqzimer.github.io/pcsx2-helm-chart/HenriqZimer-helm-charts-public.asc
     apiVersion: v2
     appVersion: latest
-    created: "2026-08-23T21:55:59.680368906Z"
+    created: "2026-08-23T22:50:08.800322294Z"
     description: A Helm chart for PCSX2 - the linuxserver.io PS2 emulator KasmVNC
       webtop image
     digest: 7f3df92be761be4fe9a6c0f57ee33a002c7db4ba8acd8c35d25fd2059d1fb11b
@@ -996,7 +996,7 @@ entries:
           url: https://github.com/HenriqZimer/pcsx2-helm-chart/blob/main/chart/README.md
     apiVersion: v2
     appVersion: latest
-    created: "2026-08-23T21:55:59.67875512Z"
+    created: "2026-08-23T22:50:08.798958239Z"
     description: A Helm chart for PCSX2 - the linuxserver.io PS2 emulator KasmVNC
       webtop image
     digest: c2658be7d23bf66396db0b1458a7a74c63931d708c31ed1e3c6d5247405cd734
@@ -1062,7 +1062,7 @@ entries:
           url: https://github.com/HenriqZimer/pcsx2-helm-chart/blob/main/chart/README.md
     apiVersion: v2
     appVersion: latest
-    created: "2026-08-23T21:55:59.676429037Z"
+    created: "2026-08-23T22:50:08.797378137Z"
     description: A Helm chart for PCSX2 - the linuxserver.io PS2 emulator KasmVNC
       webtop image
     digest: 717ba10dda799fe6ec5b3440f9b3427a7456b6009787ca5d59da4c1e6e0f580f
@@ -1294,4 +1294,4 @@ entries:
     urls:
     - https://github.com/HenriqZimer/pcsx2-helm-chart/releases/download/pcsx2-1.0.0/pcsx2-1.0.0.tgz
     version: 1.0.0
-generated: "2026-08-23T22:49:31.055732247Z"
+generated: "2026-08-23T22:50:08.794784061Z"
