@@ -2,7 +2,7 @@ apiVersion: v2
 name: pcsx2
 description: A Helm chart for PCSX2 - the linuxserver.io PS2 emulator KasmVNC webtop image
 type: application
-version: 1.5.3
+version: 1.5.4
 appVersion: "latest"
 icon: https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/pcsx2-logo.png
 keywords:
