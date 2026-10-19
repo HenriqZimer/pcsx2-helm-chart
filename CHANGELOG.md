@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-10-19
+
+### Changed
+- Image tag pinned to `2.8.2-ls87` (was `latest`) and `appVersion` set to `2.8.2`.
+
+### Added
+- `values.yaml`: documented the Selkies base-image settings (`DRI_NODE`/`DRINODE`/`AUTO_GPU`, `SELKIES_*` streaming options, `LC_ALL`, `NO_GAMEPAD`, `SUBFOLDER`, ...) as commented examples under `env`, and noted that basic auth is enabled by setting `CUSTOM_USER` + `PASSWORD`.
+
 ## [1.5.3] - 2026-08-23
 
 ### Changed

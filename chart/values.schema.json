@@ -65,7 +65,7 @@
         },
         "tag": {
           "type": "string",
-          "default": "latest"
+          "default": "2.8.2-ls87"
         },
         "pullPolicy": {
           "type": "string",
